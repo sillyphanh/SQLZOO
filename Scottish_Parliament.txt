@@ -1,0 +1,34 @@
+1. One MSP was kicked out of the Labour party and has no party. Find him.
+SELECT NAME
+FROM MSP
+WHERE PARTY IS NULL
+
+2. Obtain a list of all parties and leaders.
+SELECT DISTINCT P.NAME, LEADER
+FROM MSP M, PARTY P
+
+3. Give the party and the leader for the parties which have leaders.
+SELECT DISTINCT P.NAME, LEADER
+FROM MSP M, PARTY P
+WHERE LEADER IS NOT NULL
+
+4. Obtain a list of all parties which have at least one MSP.
+SELECT P.NAME
+FROM MSP M JOIN PARTY P ON P.CODE=M.PARTY
+GROUP BY M.PARTY, P.NAME
+HAVING COUNT(PARTY)>=1
+
+5. Obtain a list of all MSPs by name, give the name of the MSP and the name of the party where available. Be sure that Canavan MSP, Dennis is in the list. Use ORDER BY msp.name to sort your output by MSP.
+SELECT M.NAME, P.NAME
+FROM MSP M LEFT JOIN PARTY P ON P.CODE=M.PARTY
+ORDER BY M.NAME
+
+6. Obtain a list of parties which have MSPs, include the number of MSPs.
+SELECT P.NAME, COUNT(P.NAME)
+FROM PARTY P JOIN MSP M ON M.PARTY=P.CODE
+GROUP BY P.NAME
+
+7. A list of parties with the number of MSPs; include parties with no MSPs.
+SELECT P.NAME, COUNT(M.NAME)
+FROM PARTY P LEFT JOIN MSP M ON M.PARTY=P.CODE
+GROUP BY P.NAME
