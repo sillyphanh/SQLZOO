@@ -1,0 +1,66 @@
+1. Show the total number of prizes awarded.
+SELECT COUNT(winner) FROM nobel
+
+2. List each subject - just once
+SELECT DISTINCT SUBJECT
+FROM NOBEL
+
+3. Show the total number of prizes awarded for Physics.
+SELECT COUNT(WINNER)
+FROM NOBEL
+WHERE SUBJECT='PHYSICS'
+
+4. For each subject show the subject and the number of prizes.
+SELECT SUBJECT, COUNT(WINNER)
+FROM NOBEL
+GROUP BY SUBJECT
+
+5. For each subject show the first year that the prize was awarded.
+SELECT SUBJECT, MIN(YR)
+FROM NOBEL
+GROUP BY SUBJECT
+
+6. For each subject show the number of prizes awarded in the year 2000.
+SELECT SUBJECT, COUNT(WINNER)
+FROM NOBEL
+WHERE YR=2000
+GROUP BY SUBJECT
+
+7. Show the number of different winners for each subject.
+SELECT SUBJECT, COUNT(DISTINCT WINNER)
+FROM NOBEL
+GROUP BY SUBJECT
+
+8. For each subject show how many years have had prizes awarded.
+SELECT SUBJECT, COUNT(DISTINCT YR)
+FROM NOBEL
+GROUP BY SUBJECT
+
+9. Show the years in which three prizes were given for Physics.
+SELECT YR
+FROM NOBEL
+WHERE SUBJECT='PHYSICS'
+GROUP BY YR
+HAVING COUNT(WINNER)=3
+
+10. Show winners who have won more than once.
+SELECT WINNER
+FROM NOBEL
+GROUP BY WINNER
+HAVING COUNT(WINNER)>1
+
+11. Show winners who have won more than one subject.
+SELECT WINNER
+FROM NOBEL
+GROUP BY WINNER
+HAVING COUNT(DISTINCT SUBJECT)>1
+
+12. Show the year and subject where 3 prizes were given. Show only years 2000 onwards.
+SELECT YR, SUBJECT
+FROM NOBEL
+WHERE YR>=2000
+GROUP BY YR, SUBJECT
+HAVING COUNT(WINNER)=3
+
+
+
