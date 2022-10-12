@@ -1,0 +1,98 @@
+--1. List the films where the yr is 1962 [Show id, title]
+SELECT ID, TITLE
+FROM MOVIE
+WHERE YR=1962
+
+--2. Give year of 'Citizen Kane'.
+SELECT YR
+FROM MOVIE
+WHERE TITLE='Citizen Kane'
+
+--3. List all of the Star Trek movies, include the id, title and yr (all of these movies include the words Star Trek in the title). Order results by year.
+SELECT ID, TITLE, YR
+FROM MOVIE
+WHERE TITLE LIKE '%Star Trek%'
+
+--4. What id number does the actor 'Glenn Close' have?
+SELECT ID
+FROM ACTOR
+WHERE NAME='Glenn Close'
+
+--5. What is the id of the film 'Casablanca'
+SELECT ID
+FROM MOVIE
+WHERE TITLE =  'Casablanca'
+
+--6. Obtain the cast list for 'Casablanca'.
+The cast list is the names of the actors who were in the movie.
+SELECT NAME
+FROM ACTOR A JOIN CASTING C
+ON A.ID=C.ACTORID
+JOIN MOVIE M ON M.ID=C.MOVIEID
+WHERE MOVIEID=27
+
+--7. Obtain the cast list for the film 'Alien'
+SELECT NAME
+FROM ACTOR A JOIN CASTING C
+ON A.ID=C.ACTORID
+JOIN MOVIE M ON M.ID=C.MOVIEID
+WHERE M.TITLE='ALIEN'
+
+--8. List the films in which 'Harrison Ford' has appeared
+SELECT TITLE
+FROM MOVIE M JOIN CASTING C ON C.MOVIEID=M.ID
+JOIN ACTOR A ON A.ID=C.ACTORID
+WHERE NAME='Harrison Ford'
+
+--9. List the films where 'Harrison Ford' has appeared - but not in the starring role. [Note: the ord field of casting gives the position of the actor. If ord=1 then this actor is in the starring role]
+SELECT TITLE
+FROM MOVIE M JOIN CASTING C ON C.MOVIEID=M.ID
+JOIN ACTOR A ON A.ID=C.ACTORID
+WHERE ORD!=1 AND NAME='Harrison Ford' 
+
+--10. List the films together with the leading star for all 1962 films.
+SELECT TITLE, NAME
+FROM MOVIE  M JOIN CASTING C ON C.MOVIEID=M.ID
+JOIN ACTOR A ON A.ID=C.ACTORID
+WHERE YR=1962 AND ORD=1
+
+--11. Which were the busiest years for 'Rock Hudson', show the year and the number of movies he made each year for any year in which he made more than 2 movies.
+SELECT YR, COUNT(M.TITLE)
+FROM MOVIE  M JOIN CASTING C ON C.MOVIEID=M.ID
+JOIN ACTOR A ON A.ID=C.ACTORID
+WHERE NAME='Rock Hudson'
+GROUP BY YR
+HAVING COUNT(A.ID)>2
+
+--12. List the film title and the leading actor for all of the films 'Julie Andrews' played in.
+SELECT TITLE, NAME
+FROM MOVIE  M JOIN CASTING C ON C.MOVIEID=M.ID
+JOIN ACTOR A ON A.ID=C.ACTORID
+WHERE ORD=1 AND M.ID IN(
+SELECT MOVIEID
+FROM CASTING
+WHERE ACTORID IN(
+SELECT ID FROM ACTOR
+WHERE NAME='Julie Andrews'))
+
+--13. Obtain a list, in alphabetical order, of actors who've had at least 15 starring roles.
+SELECT NAME
+FROM ACTOR A JOIN CASTING C ON C.ACTORID=A.ID
+WHERE ORD=1
+GROUP BY NAME
+HAVING COUNT(ACTORID)>=15
+
+--14. List the films released in the year 1978 ordered by the number of actors in the cast, then by title.
+SELECT TITLE, COUNT(ACTORID)
+FROM MOVIE JOIN CASTING ON CASTING.MOVIEID=MOVIE.ID
+WHERE YR=1978
+GROUP BY TITLE
+ORDER BY COUNT(ACTORID) DESC, TITLE
+
+--15. List all the people who have worked with 'Art Garfunkel'.
+SELECT NAME
+FROM ACTOR JOIN CASTING C ON ACTOR.ID=C.ACTORID
+WHERE NAME != 'Art Garfunkel' AND MOVIEID IN(
+SELECT MOVIEID
+FROM CASTING C JOIN ACTOR A ON A.ID=C.ACTORID
+WHERE NAME='ART GARFUNKEL')
